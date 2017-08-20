@@ -1,10 +1,12 @@
-import com.sun.tools.javac.util.Pair;
+package com.jingerbread;
+
 import javacalculus.core.CALC;
 import javacalculus.core.CalcParser;
 import javacalculus.evaluator.CalcSUB;
 import javacalculus.struct.CalcDouble;
 import javacalculus.struct.CalcObject;
 import javacalculus.struct.CalcSymbol;
+import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -46,7 +48,7 @@ public class MathChart extends JFrame {
 
     private XYDataset generateDataSet(String intervalName, List<Pair<Double, Double>> data) {
         XYSeries series = new XYSeries(intervalName);
-        data.forEach(p -> series.add(p.fst, p.snd));
+        data.forEach(p -> series.add(p.getKey(), p.getValue()));
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series);
 
@@ -148,10 +150,10 @@ public class MathChart extends JFrame {
         //calc function
         CalcObject function = new CalcParser().parse(expression).evaluate();
         List<Pair<Double, Double>> diffValues = new LinkedList<Pair<Double, Double>>();
-        for (double i = interval.fst; i <= interval.snd; i += 0.1) {
+        for (double i = interval.getKey(); i <= interval.getValue(); i += 0.1) {
             Double f1 = Double.parseDouble(CALC.SYM_EVAL(calc(function, "x", i)).toString());
             Double f0 = Double.parseDouble(CALC.SYM_EVAL(calc(function, "x", i - 0.01)).toString());
-            diffValues.add(Pair.of(i, (f1 - f0)/ 0.01));
+            diffValues.add(new Pair(i, (f1 - f0)/ 0.01));
         }
 
         log.info("Differentiate values {}", diffValues);
@@ -169,7 +171,7 @@ public class MathChart extends JFrame {
         String start = matcher.group(1);
         String end = matcher.group(2);
 
-        return Pair.of(Double.valueOf(start), Double.valueOf(end));
+        return new Pair(Double.valueOf(start), Double.valueOf(end));
     }
 
     static CalcObject calc(CalcObject input, String var, double number) {
