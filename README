@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=lib/jcalc-1.0.jar -DgroupId=org.jcalculus -DartifactId=jcalc -Dversion=1.0 -Dpackaging=jar

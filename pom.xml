@@ -9,7 +9,6 @@
     <version>1.0-SNAPSHOT</version>
 
     <build>
-        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -22,30 +21,26 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
+                    <artifactId>maven-shade-plugin</artifactId>
                     <executions>
                         <execution>
-                            <phase>install</phase>
+                            <phase>package</phase>
                             <goals>
-                                <goal>single</goal>
+                                <goal>shade</goal>
                             </goals>
                             <configuration>
-                                <archive>
-                                    <manifest>
-                                        <mainClass>
-                                            com.jingerbread.MathChart
-                                        </mainClass>
-                                    </manifest>
-                                </archive>
-                                <descriptorRefs>
-                                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                                </descriptorRefs>
+                                <transformers>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                        <manifestEntries>
+                                            <Main-Class>com.jingerbread.MathChart</Main-Class>
+                                        </manifestEntries>
+                                    </transformer>
+                                </transformers>
                             </configuration>
                         </execution>
                     </executions>
                 </plugin>
             </plugins>
-        </pluginManagement>
     </build>
 
 
@@ -74,22 +69,16 @@
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.19</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jfreechart-1.0.19.jar</systemPath>
         </dependency>
         <dependency>
             <artifactId>jcommon</artifactId>
             <groupId>org.jfree</groupId>
             <version>1.0.23</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jcommon-1.0.23.jar</systemPath>
         </dependency>
         <dependency>
             <artifactId>jcalc</artifactId>
             <groupId>org.jcalculus</groupId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jcalc-1.0.jar</systemPath>
         </dependency>
     </dependencies>
 
