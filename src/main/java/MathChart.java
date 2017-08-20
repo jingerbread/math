@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 
 @Slf4j
-public class MathChart  extends JFrame {
+public class MathChart extends JFrame {
 
     private void initChart(String name, List<Pair<Double, Double>> data) {
         XYDataset dataset = generateDataSet(name, data);
@@ -56,9 +56,9 @@ public class MathChart  extends JFrame {
     private JFreeChart createChart(String name, XYDataset dataset) {
 
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "Average salary per age",
-                "Age",
-                "Salary (€)",
+                name,
+                "x",
+                "y",
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,
@@ -83,7 +83,7 @@ public class MathChart  extends JFrame {
 
         chart.getLegend().setFrame(BlockBorder.NONE);
 
-        chart.setTitle(new TextTitle("Average Salary per Age",
+        chart.setTitle(new TextTitle(name,
                         new Font("Serif", java.awt.Font.BOLD, 18)
                 )
         );
@@ -105,6 +105,7 @@ public class MathChart  extends JFrame {
         do {
             try {
                 List<Pair<Double, Double>> data = calculate();
+                mathChart.initChart("y", data);
                 SwingUtilities.invokeLater(() -> {
                     mathChart.setVisible(true);
                 });
@@ -141,8 +142,8 @@ public class MathChart  extends JFrame {
         Pair<Double, Double> interval = parseInterval(intervalInput);
         log.info("Entered interval: {}", interval);
 
-       // CalcObject value = calc(diff, "x", 0.0);
-       // log.info("Calc in x {}: {}", "0.0", CALC.SYM_EVAL(value));
+        CalcObject value = calc(diff, "x", 0.0);
+        log.info("Calc in x {}: {}", "0.0", CALC.SYM_EVAL(value));
 
         //calc function
         CalcObject function = new CalcParser().parse(expression).evaluate();
@@ -158,12 +159,8 @@ public class MathChart  extends JFrame {
        return diffValues;
     }
 
-    static void showPlot(List<Pair<Double, Double>> values) {
-
-    }
-
     static Pair<Double, Double> parseInterval(String interval) {
-        String patternString = "\\[(\\d\\.?\\d*),\\s?(\\d\\.?\\d*)\\]";
+        String patternString = "\\[(-?\\d\\.?\\d*),\\s?(-?\\d\\.?\\d*)\\]";
         Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(interval);
         if (!matcher.matches()) {
