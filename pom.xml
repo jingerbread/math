@@ -46,11 +46,27 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.21</version>
         </dependency>
-        <!--dependency>
+        <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.19</version>
-        </dependency-->
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/jfreechart-1.0.19.jar</systemPath>
+        </dependency>
+        <dependency>
+            <artifactId>jcommon</artifactId>
+            <groupId>org.jfree</groupId>
+            <version>1.0.23</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/jcommon-1.0.23.jar</systemPath>
+        </dependency>
+        <dependency>
+            <artifactId>jcalc</artifactId>
+            <groupId>org.jcalculus</groupId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/jcalc-1.0.jar</systemPath>
+        </dependency>
     </dependencies>
 
 </project>
