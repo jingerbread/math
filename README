@@ -12,18 +12,18 @@ java -jar target/math-1.0-SNAPSHOT.jar
 
 Usage example:
 
-0    [main] INFO  com.jingerbread.MathChart  - Enter expression, note use uppercase function names:
+0    [main] INFO  MathChart  - Enter expression, note use uppercase function names:
 SIN(x)
-7663 [main] INFO  com.jingerbread.MathChart  - Integrate with respect to:
+7663 [main] INFO  MathChart  - Integrate with respect to:
 x
-9798 [main] INFO  com.jingerbread.MathChart  - Result:
-9798 [main] INFO  com.jingerbread.MathChart  - ADD(C,MULTIPLY(-1,COS(x)))
-9798 [main] INFO  com.jingerbread.MathChart  - Enter interval [0, 1]
+9798 [main] INFO  MathChart  - Result:
+9798 [main] INFO  MathChart  - ADD(C,MULTIPLY(-1,COS(x)))
+9798 [main] INFO  MathChart  - Enter interval [0, 1]
 [0, 1]
-14556 [main] INFO  com.jingerbread.MathChart  - Entered interval: 0.0=1.0
-14559 [main] INFO  com.jingerbread.MathChart  - Calculate integral on interval 0.0=1.0: 0.4596977
-14559 [main] INFO  com.jingerbread.MathChart  - Enter step of numeric integration
+14556 [main] INFO  MathChart  - Entered interval: 0.0=1.0
+14559 [main] INFO  MathChart  - Calculate integral on interval 0.0=1.0: 0.4596977
+14559 [main] INFO  MathChart  - Enter step of numeric integration
 0.01
-18345 [main] INFO  com.jingerbread.MathChart  - Numeric calculate integral on interval 0.0=1.0: 0.45969960958999995
+18345 [main] INFO  MathChart  - Numeric calculate integral on interval 0.0=1.0: 0.45969960958999995
 
 See the graphics
