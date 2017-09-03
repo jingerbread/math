@@ -32,7 +32,7 @@
                                 <transformers>
                                     <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                         <manifestEntries>
-                                            <Main-Class>com.jingerbread.math.Chart</Main-Class>
+                                            <Main-Class>com.jingerbread.Main</Main-Class>
                                         </manifestEntries>
                                     </transformer>
                                 </transformers>
