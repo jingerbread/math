@@ -3,6 +3,7 @@ package com.jingerbread;
 import javacalculus.core.CALC;
 import javacalculus.core.CalcParser;
 import javacalculus.evaluator.CalcSUB;
+import javacalculus.exception.CalcSyntaxException;
 import javacalculus.struct.CalcDouble;
 import javacalculus.struct.CalcObject;
 import javacalculus.struct.CalcSymbol;
@@ -94,19 +95,28 @@ public class MathChart extends JFrame {
 
     }
 
-    public static void main(String[] args) throws Exception {
-        String patternString = "\\[(\\d\\.?\\d*),\\s?(\\d\\.?\\d*)\\]";
-        Pattern pattern = Pattern.compile(patternString);
-        Matcher matcher = pattern.matcher("[0.1, 0.9]");
-        boolean start = matcher.matches();
-        log.info("" + start + ": " + matcher.groupCount() + matcher.group(1));
+    public static void main(String[] args)  {
+        Scanner in = new Scanner(System.in);
+        boolean end;
+        do {
+            try {
+                calculateInt();
+            } catch (Exception e) {
+                log.error("Calculation failed: ", e);
+            }
+            log.info("If you want to exit: enter yes");
+            String exit = in.nextLine();
+            end = exit.equalsIgnoreCase("Yes");
+        } while (!end);
+    }
 
+    private static void differentiate() {
         final MathChart mathChart = new MathChart();
         Scanner in = new Scanner(System.in);
         boolean end = true;
         do {
             try {
-                List<Pair<Double, Double>> data = calculate();
+                List<Pair<Double, Double>> data = calculateDiff();
                 mathChart.initChart("y", data);
                 SwingUtilities.invokeLater(() -> {
                     mathChart.setVisible(true);
@@ -120,7 +130,66 @@ public class MathChart extends JFrame {
         } while(!end);
     }
 
-    private static List<Pair<Double, Double>> calculate() throws Exception {
+    private static void calculateInt() throws Exception {
+        log.info("Enter expression, note use uppercase function names: ");
+        Scanner in = new Scanner(System.in);
+        String expression = in.nextLine();
+        log.info("Integrate with respect to:");
+        String variable = in.nextLine();
+
+        // differentiate
+        String command = "INT(" + expression + ", " + variable + ")";
+        CalcParser parser = new CalcParser();
+        CalcObject parsed = parser.parse(command);
+        CalcObject intFunction = parsed.evaluate();
+
+        // compute numerical value
+        intFunction = CALC.SYM_EVAL(intFunction);
+
+        log.info("Result:");
+        log.info(intFunction.toString());
+
+        log.info("Enter interval [0, 1]");
+        String intervalInput = in.nextLine();
+        Pair<Double, Double> interval = parseInterval(intervalInput);
+        log.info("Entered interval: {}", interval);
+
+        CalcObject F_a = calc(intFunction, "x", interval.getKey());
+        CalcObject F_b = calc(intFunction, "x", interval.getValue());
+        double f_a = getValue(CALC.SYM_EVAL(F_a).toString());
+        double f_b = getValue(CALC.SYM_EVAL(F_b).toString());
+        log.info("Calculate integral on interval {}: {}", interval, f_b - f_a);
+
+        log.info("Enter step of numeric integration");
+        double dx = Double.valueOf(in.nextLine());
+
+        CalcObject function = new CalcParser().parse(expression).evaluate();
+        double s = 0;
+        for (double i = interval.getKey(); i <= interval.getValue(); i += dx) {
+            Double f = Double.parseDouble(CALC.SYM_EVAL(calc(function, "x", i + dx/2)).toString());
+            double ds = f * dx;
+            s += ds;
+        }
+        log.info("Numeric calculate integral on interval [{}]: {}", interval, s);
+    }
+
+    /**
+     * Get numeric value from ADD(numeric,C) string
+     * @param valueWithC ADD(numeric,C)
+     */
+    private static double getValue(String valueWithC) {
+        String patternString = "ADD\\((-?\\d\\.?\\d*),\\s?C\\)";
+        Pattern pattern = Pattern.compile(patternString);
+        Matcher matcher = pattern.matcher(valueWithC);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Can't parse interval " + valueWithC);
+        }
+        String start = matcher.group(1);
+
+        return Double.valueOf(start);
+    }
+
+    private static List<Pair<Double, Double>> calculateDiff() throws Exception {
         log.info("Enter expression, note use uppercase function names: ");
         Scanner in = new Scanner(System.in);
         String expression = in.nextLine();
@@ -143,9 +212,6 @@ public class MathChart extends JFrame {
         String intervalInput = in.nextLine();
         Pair<Double, Double> interval = parseInterval(intervalInput);
         log.info("Entered interval: {}", interval);
-
-        CalcObject value = calc(diff, "x", 0.0);
-        log.info("Calc in x {}: {}", "0.0", CALC.SYM_EVAL(value));
 
         //calc function
         CalcObject function = new CalcParser().parse(expression).evaluate();
